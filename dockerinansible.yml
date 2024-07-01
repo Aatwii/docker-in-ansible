@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: 'https://download.docker.com/linux/ubuntu/gpg'
+        state: present
+    - name: Add Docker Repository
+      apt_repository:
+        repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable'
+        state: present
+    - name: Install Docker Engine
+      apt:
+        name: docker-ce=5:25.0.5-1~ubuntu.20.04~focal
+        state: present
+        allow_downgrade: true
+    - name: Install Docker CLI
+      apt:
+        name: docker-ce-cli=5:25.0.5-1~ubuntu.20.04~focal
+        state: present
+        allow_downgrade: true
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        enabled: 'yes'
+        state: started
